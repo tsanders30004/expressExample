@@ -1,5 +1,7 @@
 var express = require('express');
 var myApp = express();
+
+var fs = require('fs');
 var bodyParser = require('body-parser');
 
 myApp.use(bodyParser.urlencoded({extended: false}));
@@ -34,10 +36,25 @@ myApp.get('/form', function(request, response){
      });
 });
 
+myApp.get('/thankyou', function(request, response){
+     response.render('thankyou', {
+          title: 'Thank You'
+     });
+});
+
 myApp.post('/submit', function(request, response) {
-  var data = request.body;
-  console.log(data);
-  response.send('form processed');
+     var data = request.body;
+     console.log(data);
+
+     var fileData = 'message from ' + data.email + '\npassword = ' + data.password;
+     console.log(fileData);
+
+     fs.appendFile('messages.txt', fileData, function(err) {
+          if (err) {
+               throw err;
+          }
+     });
+     response.redirect('/thankyou');
 });
 
 myApp.listen(3000, function(){
