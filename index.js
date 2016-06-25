@@ -38,7 +38,8 @@ myApp.get('/form', function(request, response){
 
 myApp.get('/thankyou', function(request, response){
      response.render('thankyou', {
-          title: 'Thank You'
+          title: 'Thank You',
+          email: request.query.email    /* needed to pass the email address to the thankyou.hbs file */
      });
 });
 
@@ -54,7 +55,8 @@ myApp.post('/submit', function(request, response) {
                throw err;
           }
      });
-     response.redirect('/thankyou');
+
+     response.redirect('/thankyou?email=' + data.email);    /* this will also close the connection */
 });
 
 myApp.listen(3000, function(){
